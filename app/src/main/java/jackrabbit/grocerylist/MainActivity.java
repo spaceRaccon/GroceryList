@@ -1,5 +1,7 @@
 package jackrabbit.grocerylist;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +14,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, DialogInterface {
 
     private EditText addTxt;
     private Button addBtn;
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AlertDialog.Builder alertDialogBuilder =  new AlertDialog.Builder(this);
 
         addTxt = (EditText)findViewById(R.id.addView);
 
@@ -44,10 +47,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int itemPosition = position;
                 String itemValue = (String)list.getItemAtPosition(position);
-
-                Toast.makeText(getApplicationContext(), "Position: " +itemPosition+ " ListItem: " +itemValue, Toast.LENGTH_LONG).show();
+                PopUp();
+                //Toast.makeText(getApplicationContext(), "Position: " +itemPosition+ " ListItem: " +itemValue, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public void PopUp(){
+        AlertDialog.Builder alertDialogBuilder =  new AlertDialog.Builder(this);
+
+        // set title
+        alertDialogBuilder.setTitle("Test");
+
+        // set Dialog message
+        alertDialogBuilder.setMessage("Click yes to exit")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id){
+                        dialog.cancel();
+                    }
+                });
+
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     @Override
@@ -60,5 +83,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (addValue != "")
                 groceryList.add(addValue);
         }
+    }
+
+    @Override
+    public void cancel() {
+
+    }
+
+    @Override
+    public void dismiss() {
+
     }
 }

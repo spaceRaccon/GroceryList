@@ -7,23 +7,18 @@
     tools:context="jackrabbit.grocerylist.MainActivity">
 
 
-
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:descendantFocusability="beforeDescendants"
-        android:focusableInTouchMode="true"
-        android:weightSum="100">
+        android:focusableInTouchMode="true">
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/hint"
-
             android:layout_weight="80"
-
             android:id="@+id/addView" >
         </EditText>
 
@@ -39,7 +34,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="match_parent">
 
         <ListView
             android:layout_width="match_parent"
@@ -49,4 +44,5 @@
         </ListView>
 
     </LinearLayout>
+
 </LinearLayout>
