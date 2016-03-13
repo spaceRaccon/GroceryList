@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         AlertDialog.Builder alertDialogBuilder =  new AlertDialog.Builder(this);
 
         addTxt = (EditText)findViewById(R.id.addView);
@@ -40,33 +41,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         groceryList.add("apples");
         groceryList.add("soup");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String> (this,android.R.layout.simple_expandable_list_item_1, android.R.id.text1, groceryList);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String> (this,android.R.layout.simple_expandable_list_item_1, android.R.id.text1, groceryList);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int itemPosition = position;
-                String itemValue = (String)list.getItemAtPosition(position);
-                PopUp();
-                //Toast.makeText(getApplicationContext(), "Position: " +itemPosition+ " ListItem: " +itemValue, Toast.LENGTH_LONG).show();
+                String itemValue = (String) list.getItemAtPosition(position);
+                PopUp(adapter, itemValue, itemPosition);
+
             }
         });
     }
 
-    public void PopUp(){
+    public void PopUp(final ArrayAdapter<String> adapter, final String itemVaule, final int itemPosition){
         AlertDialog.Builder alertDialogBuilder =  new AlertDialog.Builder(this);
 
         // set title
-        alertDialogBuilder.setTitle("Test");
+        alertDialogBuilder.setTitle("Selected");
 
         // set Dialog message
-        alertDialogBuilder.setMessage("Click yes to exit")
+        alertDialogBuilder.setMessage("Do you wish to delete " +itemVaule+ ": " +itemPosition)
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id){
-                        dialog.cancel();
+                .setNegativeButton("Remove", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        adapter.remove(itemVaule);
                     }
-                });
+                }).setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
 
 
         AlertDialog alertDialog = alertDialogBuilder.create();
@@ -78,10 +83,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String addValue;
 
+        // add button
         if (v.equals(addBtn)){
             addValue = addTxt.getText().toString();
-            if (addValue != "")
+            // check to see if the addTxt is empty
+            if (addValue != null){
                 groceryList.add(addValue);
+                Toast.makeText(this, addValue+ " added", Toast.LENGTH_SHORT).show();
+            }
+            else
+                Toast.makeText(this, "Nothing to add", Toast.LENGTH_SHORT).show();
+
+            addTxt.setText("");
         }
     }
 
