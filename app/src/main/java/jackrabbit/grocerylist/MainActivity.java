@@ -2,6 +2,7 @@ package jackrabbit.grocerylist;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,35 +13,45 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, DialogInterface {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String FILENAME = "groceryList";
     private EditText addTxt;
     private Button addBtn;
+    private Button saveBtn;
     private ListView list;
 
     private ArrayList<String> groceryList = new ArrayList<String>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        read();
+
         AlertDialog.Builder alertDialogBuilder =  new AlertDialog.Builder(this);
 
         addTxt = (EditText)findViewById(R.id.addView);
 
+        // add button
         addBtn = (Button)findViewById(R.id.addbtn);
         addBtn.setOnClickListener(this);
 
+        saveBtn = (Button)findViewById(R.id.saveBtn);
+        saveBtn.setOnClickListener(this);
+
+        // list view
         list = (ListView)findViewById(R.id.list);
-
-        // test
-        groceryList.add("pizza");
-        groceryList.add("apples");
-        groceryList.add("soup");
-
         final ArrayAdapter<String> adapter = new ArrayAdapter<String> (this,android.R.layout.simple_expandable_list_item_1, android.R.id.text1, groceryList);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -80,12 +91,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-
         String addValue;
-
         // add button
         if (v.equals(addBtn)){
-            addValue = addTxt.getText().toString();
+            addValue = addTxt.getText().toString() + " ";
+
             // check to see if the addTxt is empty
             if (addValue != null){
                 groceryList.add(addValue);
@@ -95,16 +105,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "Nothing to add", Toast.LENGTH_SHORT).show();
 
             addTxt.setText("");
+        } else if (v.equals(saveBtn)){
+            saveList();
         }
     }
 
-    @Override
-    public void cancel() {
+    public void saveList() {
+
+        FileOutputStream fOut;
+        try {
+             fOut = openFileOutput(FILENAME, MODE_WORLD_READABLE);
+            for (String s: groceryList){
+                fOut.write(s.getBytes());
+            }
+            fOut.close();
+            Toast.makeText(this, "Saved file", Toast.LENGTH_SHORT).show();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
-    @Override
-    public void dismiss() {
+    public void read () {
+        FileInputStream fin = null;
+        int c;
+        String temp = "";
+        try {
+            fin = openFileInput(FILENAME);
+            while ((c = fin.read()) != -1){
+                temp = temp + Character.toString((char) c);
+
+            }
+            groceryList.add(temp);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }
