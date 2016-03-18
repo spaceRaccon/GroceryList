@@ -2,7 +2,6 @@ package jackrabbit.grocerylist;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,9 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -97,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             addValue = addTxt.getText().toString() + " ";
 
             // check to see if the addTxt is empty
-            if (addValue != null){
+            if (addValue != ""){
                 groceryList.add(addValue);
                 Toast.makeText(this, addValue+ " added", Toast.LENGTH_SHORT).show();
             }
@@ -110,39 +107,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
     public void saveList() {
 
-        FileOutputStream fOut;
+        FileOutputStream fOut = null;
         try {
              fOut = openFileOutput(FILENAME, MODE_WORLD_READABLE);
             for (String s: groceryList){
                 fOut.write(s.getBytes());
             }
             fOut.close();
-            Toast.makeText(this, "Saved file", Toast.LENGTH_SHORT).show();
         } catch (Exception e){
             e.printStackTrace();
         }
 
+        Toast.makeText(this, "Saved file", Toast.LENGTH_SHORT).show();
+
     }
 
     public void read () {
+
         FileInputStream fin = null;
         int c;
         String temp = "";
+
         try {
             fin = openFileInput(FILENAME);
             while ((c = fin.read()) != -1){
                 temp = temp + Character.toString((char) c);
-
             }
-            groceryList.add(temp);
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        if (temp != ""){
+            String[] str = temp.split(" "); // split temp into an array
+
+            for (int i=0; i<str.length; i++){
+                groceryList.add(str[i]);
+            }
+        }
+
+
     }
+
+
 }
