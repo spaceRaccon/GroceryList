@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alertDialogBuilder.setTitle("Selected");
 
         // set Dialog message
-        alertDialogBuilder.setMessage("Do you wish to delete " +itemVaule+ ": " +itemPosition)
+        alertDialogBuilder.setMessage("Do you wish to delete " +itemVaule)
                 .setCancelable(false)
                 .setNegativeButton("Remove", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String addValue;
         // add button
         if (v.equals(addBtn)){
-            addValue = addTxt.getText().toString() + " ";
+            addValue = addTxt.getText().toString();
 
             // check to see if the addTxt is empty
             if (addValue != ""){
@@ -111,6 +111,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void saveList() {
 
         FileOutputStream fOut = null;
+
+        for (int i=0; i<groceryList.size(); i++){
+            groceryList.set(i, groceryList.get(i)+ ",");
+        }
         try {
              fOut = openFileOutput(FILENAME, MODE_WORLD_READABLE);
             for (String s: groceryList){
@@ -142,16 +146,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-        if (temp != ""){
-            String[] str = temp.split(" "); // split temp into an array
 
-            for (int i=0; i<str.length; i++){
+        String[] str = temp.split(",,"); // split temp into an array
+
+        for (int i=0; i<str.length; i++) {
+            if (str[i] == "") {
+
+            }else
                 groceryList.add(str[i]);
-            }
         }
-
 
     }
 
+
+    // automatically call when the activity has been paused or stoped
+    @Override
+    public void onPause(){
+        super.onPause();
+        saveList();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        saveList();
+    }
 
 }
