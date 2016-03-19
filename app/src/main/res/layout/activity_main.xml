@@ -18,23 +18,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/hint"
-            android:layout_weight="60"
+            android:layout_weight="85"
             android:id="@+id/addView" >
         </EditText>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="20"
+            android:layout_weight="15"
             android:text="ADD"
             android:id="@+id/addbtn" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="20"
-            android:text="SAVE"
-            android:id="@+id/saveBtn" />
+
 
     </LinearLayout>
 

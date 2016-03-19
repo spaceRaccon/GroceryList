@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String FILENAME = "groceryList";
     private EditText addTxt;
     private Button addBtn;
-    private Button saveBtn;
+
     private ListView list;
 
     private ArrayList<String> groceryList = new ArrayList<String>();
@@ -43,9 +43,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // add button
         addBtn = (Button)findViewById(R.id.addbtn);
         addBtn.setOnClickListener(this);
-
-        saveBtn = (Button)findViewById(R.id.saveBtn);
-        saveBtn.setOnClickListener(this);
 
         // list view
         list = (ListView)findViewById(R.id.list);
@@ -102,8 +99,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "Nothing to add", Toast.LENGTH_SHORT).show();
 
             addTxt.setText("");
-        } else if (v.equals(saveBtn)){
-            saveList();
         }
     }
 
