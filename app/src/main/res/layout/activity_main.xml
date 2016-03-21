@@ -18,9 +18,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/hint"
-            android:layout_weight="85"
+            android:layout_weight="75"
             android:id="@+id/addView" >
         </EditText>
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/quantity_array"
+            android:layout_weight="10"
+            android:id="@+id/spinner_quantity" />
 
         <Button
             android:layout_width="wrap_content"
@@ -46,5 +53,6 @@
         </ListView>
 
     </LinearLayout>
+
 
 </LinearLayout>

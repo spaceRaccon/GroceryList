@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.FileInputStream;
@@ -18,15 +19,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private static final String FILENAME = "groceryList";
     private EditText addTxt;
     private Button addBtn;
+    private Spinner spinner_qty;
 
     private ListView list;
 
     private ArrayList<String> groceryList = new ArrayList<String>();
+
+    private String addValue;
+    private String qty;
 
 
     @Override
@@ -40,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         addTxt = (EditText)findViewById(R.id.addView);
 
+        // quantity selection
+        spinner_qty = (Spinner)findViewById(R.id.spinner_quantity);
+        spinner_qty.setOnItemSelectedListener(this);
         // add button
         addBtn = (Button)findViewById(R.id.addbtn);
         addBtn.setOnClickListener(this);
@@ -51,9 +59,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int itemPosition = position;
                 String itemValue = (String) list.getItemAtPosition(position);
-                PopUp(adapter, itemValue, itemPosition);
+                PopUp(adapter, itemValue, 0);
 
             }
         });
@@ -85,15 +92,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        String addValue;
+
         // add button
         if (v.equals(addBtn)){
             addValue = addTxt.getText().toString();
 
             // check to see if the addTxt is empty
             if (addValue != ""){
-                groceryList.add(addValue);
-                Toast.makeText(this, addValue+ " added", Toast.LENGTH_SHORT).show();
+                if (qty == "1") {
+                    groceryList.add(addValue);
+                } else
+                    groceryList.add(addValue + " x" + qty);
+
+                // reset qty spinner fore easier use
+                spinner_qty.setSelection(0);
             }
             else
                 Toast.makeText(this, "Nothing to add", Toast.LENGTH_SHORT).show();
@@ -110,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i=0; i<groceryList.size(); i++){
             groceryList.set(i, groceryList.get(i)+ ",");
         }
+
         try {
              fOut = openFileOutput(FILENAME, MODE_WORLD_READABLE);
             for (String s: groceryList){
@@ -153,8 +166,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-    // automatically call when the activity has been paused or stoped
+        qty = String.valueOf(parent.getItemAtPosition(position));
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // nothing here
+    }
+
+
+    // automatically call when the activity has been paused or stopped
     @Override
     public void onPause(){
         super.onPause();
@@ -166,5 +190,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStop();
         saveList();
     }
-
 }
