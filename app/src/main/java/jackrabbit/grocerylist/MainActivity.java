@@ -2,8 +2,11 @@ package jackrabbit.grocerylist;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -107,8 +111,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // reset qty spinner fore easier use
                 spinner_qty.setSelection(0);
             }
-            else
-                Toast.makeText(this, "Nothing to add", Toast.LENGTH_SHORT).show();
 
             addTxt.setText("");
         }
@@ -175,6 +177,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         // nothing here
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu){
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.saveList) {
+            saveList();
+            Toast.makeText(this, "Saved", Toast.LENGTH_LONG).show();
+            return true;
+        } else if (id == R.id.deleteList){
+            groceryList.removeAll(groceryList); // delete the entire list
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 
