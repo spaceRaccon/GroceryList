@@ -2,14 +2,13 @@ package jackrabbit.grocerylist;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -21,7 +20,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -108,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else
                     groceryList.add(addValue + " x" + qty);
 
+                // update the list
+                ((BaseAdapter) list.getAdapter()).notifyDataSetChanged();
+
                 // reset qty spinner fore easier use
                 spinner_qty.setSelection(0);
             }
@@ -190,12 +191,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         int id = item.getItemId();
 
+        // save the list
         if (id == R.id.saveList) {
             saveList();
             Toast.makeText(this, "Saved", Toast.LENGTH_LONG).show();
             return true;
-        } else if (id == R.id.deleteList){
-            groceryList.removeAll(groceryList); // delete the entire list
+        } else if (id == R.id.deleteList){ // delete the entire list
+
+            groceryList.removeAll(groceryList);
             return true;
         }
 
